@@ -15,6 +15,17 @@ apt-get update -y
 apt-get upgrade -y
 echo_progress "System updated."
 
+
+echo_progress "Installing Locale..."
+# Locale to be set
+locale="fr_FR.UTF-8"
+
+# Uncomment the desired locale in /etc/locale.gen and generate it
+sed -i "/$locale/s/^#//g" /etc/locale.gen
+locale-gen fr_FR.UTF-8
+update-locale
+echo_progress "locale installed."
+
 # Install Vim
 echo_progress "Installing Vim..."
 apt-get install vim -y
@@ -68,14 +79,19 @@ echo_progress "Python3 and pip installed."
 
 echo_progress "All specified tools have been installed successfully."
 
-echo_progress "Installing Locale..."
-# Locale to be set
-locale="fr_FR.UTF-8"
 
-# Uncomment the desired locale in /etc/locale.gen and generate it
-sed -i "/$locale/s/^#//g" /etc/locale.gen
-locale-gen
-echo_progress "locale installed."
+# Ask for QEMU installation
+echo -n "Do you want to install QEMU agent? (y/n)"
+read answer
+if [ "$answer" != "${answer#[Yy]}" ] ;then
+    echo_progress "Installing QEMU agent..."
+    apt-get install qemu-guest-agent -f
+    systemctl start qemu-guest-agent
+    systemctl enable qemu-guest-agent
+    echo_progress "Docker QEMU agent installed."
+else
+    echo_progress "Skipping QEMU agent installation."
+fi
 
 # Ask for Docker installation
 echo -n "Do you want to install Docker? (y/n) "
