@@ -134,6 +134,5 @@ echo_progress "dotfiles cloned."
 echo_progress "Creating folders"
 mkdir /folders
 chmod 775 /folders
-touch /folders/git_link.txt
-cat https://github.com/oliroche-git/dotfiles.git > /folders/git_link.txt
+
 echo_progress "Done"
